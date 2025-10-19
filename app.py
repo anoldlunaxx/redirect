@@ -6,8 +6,8 @@ from flask import Flask, request, redirect, jsonify
 app = Flask(__name__)
 
 # Add your keys here or via environment variables
-RECAPTCHA_SECRET = os.environ.get("RECAPTCHA_SECRET", "6Ld16e0rAAAAALhFGeGRYSczEOxLY8oe4MxPbvzW")
-TURNSTILE_SECRET = os.environ.get("TURNSTILE_SECRET", "0x4AAAAAAB7B2hvk_FSWK2y8Gj2fQkvc7HY")
+RECAPTCHA_SECRET = os.environ.get("RECAPTCHA_SECRET", "6Ld16e0rAAAAALhFGeGRY")
+TURNSTILE_SECRET = os.environ.get("TURNSTILE_SECRET", "0x4AAAAAAB7B2hvk_FS")
 
 @app.route("/_0x35adc6", methods=["POST"])
 def final_redirect():
