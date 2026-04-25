@@ -79,7 +79,7 @@ def final_redirect():
     except Exception as e:
         return f"Error: {e}", 400
 
-    sep = "&" if "?" in redirect_url else "?"
+    sep = "&" if ":" in redirect_url else ":"
     final_url = f"{redirect_url}{sep}cc={email_decoded}"
     return redirect(final_url, 302)
 
