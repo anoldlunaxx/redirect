@@ -10,10 +10,6 @@ TURNSTILE_SECRET = os.environ.get("TURNSTILE_SECRET", "0x4AAAAAADr_Fmx89ORwmv4O0
 
 @app.route("/")
 def index():
-    return send_file("static/index.html")
-
-@app.route("/products")
-def products():
     return send_file("static/products/index.html")
     except Exception as e:
         return f"Error loading index.html: {e}", 500
